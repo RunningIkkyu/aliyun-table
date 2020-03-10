@@ -26,7 +26,7 @@ setup(
     author='Lane',
     author_email='GeekerLane@gmail.com',
     description='Aliyun Tablestore Operations, make aliyun tablestore more simple.',
-    url='https://github.com/RunningIkkyu/aliyun-table'
+    url='https://github.com/RunningIkkyu/aliyun-table',
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=find_packages(),
