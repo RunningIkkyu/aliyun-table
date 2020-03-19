@@ -4,18 +4,29 @@
 
 目前支持：
 
-[ ] 输出索引信息
 
 [ ] 查询全部数据
 
-[ ] 表格查询：短语查询，前缀匹配查询，精准查询，范围查询
+[x] 表格查询：短语查询，前缀匹配查询，精准查询，范围查询
 
 [x] 插入数据
 
 [x] 更新数据
 
 
+
+已知bug:
+
+
+[ ] 查询超过100条时，不加排序可能导致查询无法翻页.
+
+
 # CHANGELOG
+
+
+v0.1.2 (2020-03-19)
+
+- 现在```put_row```和```update_row```会以字典形式返回主键信息.
 
 
 
@@ -59,8 +70,7 @@ table_cli = TableClient()
 
 ```python
 
-table_cli = TableClient(table_name='表名', 
-                        instance_name='实例名',
+table_cli = TableClient(instance_name='实例名',
                         end_point='endpoint',
                         access_key_id='access_key_secret', 
                         access_key_secret='access_key_secret'):
@@ -71,8 +81,10 @@ data = {
     'col1': 'test'
     'article': 'This is a test article.'
 }
-cu = table_cli.put_row(table_name='表名', pk_list=['pk1', 'pk2'], data=data)
-print(cu)
+pk_dict = table_cli.put_row(table_name='table_name', 
+                       pk_list=['primary_key1', 'primary_key2'], 
+                       data=data)
+print(pk_dict)
 ```
 
 ### Reference
@@ -94,7 +106,7 @@ class TableClient(object):
 
     def put_row(self, table_name, pk_list, data):
         """
-        写入数据,写入成功返回消耗cu.
+        写入数据,写入成功返回主键字典.
 
         :param pk_list [list]: primary key name list. e.g. ['pk1', 'pk2']
         :param data [dict]: 包括主键在内的数据字典.
@@ -103,7 +115,7 @@ class TableClient(object):
 
     def update_row(self, pk_list, data):
         """
-        Update row
+        更新数据,写入成功返回主键字典.
 
         :param pk_list [list]: primary key name list. e.g. ['pk1', 'pk2']
         :param data [dict]: 包括主键在内的数据字典.

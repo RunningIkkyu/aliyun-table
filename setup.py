@@ -22,7 +22,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
  
 setup(
     name='aliyun-table',
-    version='0.1.1',
+    version='0.1.2',
     author='Lane',
     author_email='GeekerLane@gmail.com',
     description='Aliyun Tablestore Operations, make aliyun tablestore more simple.',
