@@ -5,6 +5,7 @@ This module provide operations related to Aliyun table storage.
 import datetime
 import os
 import time
+import json
 from copy import deepcopy
 from logging import getLogger, INFO, basicConfig
 from pprint import pprint
@@ -338,6 +339,7 @@ class TableClient(object):
                     
             # 如果没有数据就跳出循环
             if not next_token: # data all returned
+                print('Next_toke is None')
                 break
             # 后续循环不需要排序了.
             search_query = SearchQuery(bool_query, next_token=next_token, limit=100, get_total_count=True)
@@ -444,8 +446,10 @@ class TableClient(object):
         # 插入数据
         try:
             #cu, _ = self.otsclient.put_row(table_name, row, condition)
-            cu, _ = self.otsclient.put_row(table_name, row)
-            return cu.write
+            cu, return_row = self.otsclient.put_row(table_name, row, return_type=ReturnType.RT_PK)
+            pk_row = return_row.primary_key
+            pk_dict = {k:v for k,v in pk_row}
+            return pk_dict
         except Exception as e:
             logger.error(e)
             #pass
@@ -480,8 +484,11 @@ class TableClient(object):
 
         condition = Condition(RowExistenceExpectation.IGNORE)
         try:
-            consumed, return_row = self.otsclient.update_row(table_name, row, condition)
-            return consumed.write, return_row
+            consumed, return_row = self.otsclient.update_row(table_name, row, condition, return_type=ReturnType.RT_PK)
+            #return consumed.write, return_row
+            pk_row = return_row.primary_key
+            pk_dict = {k:v for k,v in pk_row}
+            return pk_dict
         # 客户端异常，一般为参数错误或者网络异常。
         except OTSClientError as e:
             logger.error(f'Client error, {e}')
